@@ -36,8 +36,13 @@ const server = http.createServer((req, res) => {
     }
   }
 
-  // Handle directory requests by serving index.html within that directory
+  // Handle directory requests: redirect without trailing slash to with trailing slash
   if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) {
+    if (!req.url.split('?')[0].endsWith('/')) {
+      res.writeHead(301, { 'Location': req.url.split('?')[0] + '/' });
+      res.end();
+      return;
+    }
     filePath = path.join(filePath, 'index.html');
   }
 

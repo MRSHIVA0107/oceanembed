@@ -4,6 +4,7 @@
   "buildCommand": "node build.js",
   "outputDirectory": "dist",
   "cleanUrls": true,
+  "trailingSlash": true,
   "rewrites": [
     {
       "source": "/api/metadata",
@@ -22,8 +23,8 @@
       "destination": "/view_demo/index.html"
     },
     {
-      "source": "/view_demo/(.*)",
-      "destination": "/view_demo/$1"
+      "source": "/view_demo/",
+      "destination": "/view_demo/index.html"
     }
   ],
   "headers": [
@@ -45,6 +46,58 @@
         {
           "key": "X-Frame-Options",
           "value": "SAMEORIGIN"
+        }
+      ]
+    },
+    {
+      "source": "/view_demo/(.*\\.css)",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/css; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400"
+        }
+      ]
+    },
+    {
+      "source": "/view_demo/(.*\\.js)",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/javascript; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400"
+        }
+      ]
+    },
+    {
+      "source": "/(.*\\.css)",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/css; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400"
+        }
+      ]
+    },
+    {
+      "source": "/(.*\\.js)",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/javascript; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400"
         }
       ]
     },

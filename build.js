@@ -82,47 +82,143 @@ try {
         copySafe(srcFile, path.join(viewDemoStaticRoot, f));
       }
     }
+
+    // Safety fallback: if anything requests /styles.css at root, copy view_demo/styles.css to dist/styles.css
+    copySafe(path.join(viewDemoDir, 'styles.css'), path.join(distDir, 'styles.css'));
+    copySafe(path.join(viewDemoDir, 'script.js'), path.join(distDir, 'script.js'));
   }
 
   // 6. Write Vercel configuration to dist
-  const distVercelConfig = {
-    "$schema": "https://openapi.vercel.sh/vercel.json",
-    "version": 2,
-    "cleanUrls": true,
-    "rewrites": [
-      { "source": "/api/metadata", "destination": "/api/metadata.json" },
-      { "source": "/api/argo/matchups", "destination": "/api/argo_matchups.json" },
-      { "source": "/api/export/geojson", "destination": "/api/hazard_perimeter.geojson" },
-      { "source": "/view_demo", "destination": "/view_demo/index.html" },
-      { "source": "/view_demo/(.*)", "destination": "/view_demo/$1" }
-    ],
-    "headers": [
-      {
-        "source": "/(.*)",
-        "headers": [
-          { "key": "Access-Control-Allow-Origin", "value": "*" },
-          { "key": "Access-Control-Allow-Methods", "value": "GET,OPTIONS,HEAD" },
-          { "key": "X-Content-Type-Options", "value": "nosniff" },
-          { "key": "X-Frame-Options", "value": "SAMEORIGIN" }
-        ]
-      },
-      {
-        "source": "/api/(.*)",
-        "headers": [
-          { "key": "Content-Type", "value": "application/json" },
-          { "key": "Cache-Control", "value": "public, max-age=86400, s-maxage=86400" }
-        ]
-      },
-      {
-        "source": "/data/(.*)",
-        "headers": [
-          { "key": "Content-Type", "value": "application/json" },
-          { "key": "Cache-Control", "value": "public, max-age=86400, s-maxage=86400" }
-        ]
-      }
-    ]
-  };
-  fs.writeFileSync(path.join(distDir, 'vercel.json'), JSON.stringify(distVercelConfig, null, 2) + '\n', 'utf8');
+  fs.writeFileSync(path.join(distDir, 'vercel.json'), JSON.stringify({
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "version": 2,
+  "outputDirectory": "dist",
+  "cleanUrls": true,
+  "trailingSlash": true,
+  "rewrites": [
+    {
+      "source": "/api/metadata",
+      "destination": "/api/metadata.json"
+    },
+    {
+      "source": "/api/argo/matchups",
+      "destination": "/api/argo_matchups.json"
+    },
+    {
+      "source": "/api/export/geojson",
+      "destination": "/api/hazard_perimeter.geojson"
+    },
+    {
+      "source": "/view_demo",
+      "destination": "/view_demo/index.html"
+    },
+    {
+      "source": "/view_demo/",
+      "destination": "/view_demo/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET,OPTIONS,HEAD"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        }
+      ]
+    },
+    {
+      "source": "/view_demo/(.*\\.css)",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/css; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400"
+        }
+      ]
+    },
+    {
+      "source": "/view_demo/(.*\\.js)",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/javascript; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400"
+        }
+      ]
+    },
+    {
+      "source": "/(.*\\.css)",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/css; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400"
+        }
+      ]
+    },
+    {
+      "source": "/(.*\\.js)",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/javascript; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400"
+        }
+      ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, s-maxage=86400"
+        }
+      ]
+    },
+    {
+      "source": "/data/(.*)",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, s-maxage=86400"
+        }
+      ]
+    }
+  ]
+}, null, 2) + '\n', 'utf8');
 
   console.log('=== Vercel Build Completed Cleanly! ===');
   process.exit(0);

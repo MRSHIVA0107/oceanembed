@@ -3,9 +3,16 @@
   "version": "3.0.0",
   "description": "OceanEmbed – Deep Learning Reconstruction of Subsurface Ocean Temperature from Satellite Observations",
   "scripts": {
-    "build": "node build.js"
+    "build": "node build.js",
+    "start": "node serve_local.js"
   },
-  "keywords": ["oceanography", "deep-learning", "satellite", "incois", "moes"],
+  "keywords": [
+    "oceanography",
+    "deep-learning",
+    "satellite",
+    "incois",
+    "moes"
+  ],
   "author": "OceanEmbed Team",
   "license": "MIT"
 }

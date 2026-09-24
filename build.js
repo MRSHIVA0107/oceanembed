@@ -1,10 +1,12 @@
 const fs = require('fs');
 const path = require('path');
 
-console.log('=== Starting OceanEmbed Netlify Build ===');
+console.log('=== Starting OceanEmbed Production Vercel Build ===');
 const rootDir = __dirname;
 const distDir = path.join(rootDir, 'dist');
 const webDir = path.join(rootDir, 'web');
+const apiDir = path.join(rootDir, 'api');
+const dataDir = path.join(rootDir, 'data');
 
 try {
   fs.mkdirSync(distDir, { recursive: true });
@@ -26,10 +28,6 @@ try {
     'style.css',
     'app.js',
     'acoustics.js',
-    'landing.css',
-    'landing.js',
-    'scrolly.js',
-    'scrolly_style.css',
     'oceanembed-logo-v2.png'
   ];
 
@@ -47,14 +45,23 @@ try {
     path.join(distDir, 'OceanEmbed_Mathematical_and_Data_Specifications.pdf')
   );
 
-  // 3. Redirects
-  const redirectsDist = path.join(distDir, '_redirects');
-  const redirectsContent = '/api/metadata /api/metadata.json 200\n/api/argo/matchups /api/argo_matchups.json 200\n/api/export/geojson /api/hazard_perimeter.geojson 200\n/api/bulletin /api/bulletin.html 200\n/* /index.html 200\n';
-  fs.writeFileSync(redirectsDist, redirectsContent, 'utf-8');
-  fs.writeFileSync(path.join(rootDir, '_redirects'), redirectsContent, 'utf-8');
+  // 3. API Data Files
+  if (fs.existsSync(apiDir)) {
+    const apiFiles = fs.readdirSync(apiDir);
+    for (const f of apiFiles) {
+      copySafe(path.join(apiDir, f), path.join(distDir, 'api', f));
+    }
+  }
 
-  // 4. Pure headers for dist netlify.toml (no build command to avoid Netlify drop loops)
-  fs.writeFileSync(path.join(distDir, 'netlify.toml'), '[[headers]]\n  for = "/*"\n  [headers.values]\n    Access-Control-Allow-Origin = "*"\n\n[[headers]]\n  for = "/*.json"\n  [headers.values]\n    Content-Type = "application/json"\n    Cache-Control = "public, max-age=86400"\n');
+  // 4. Precomputed Day Data Packages
+  if (fs.existsSync(dataDir)) {
+    const dataFiles = fs.readdirSync(dataDir);
+    for (const f of dataFiles) {
+      if (f.endsWith('.json')) {
+        copySafe(path.join(dataDir, f), path.join(distDir, 'data', f));
+      }
+    }
+  }
 
   // 5. Solution Demo Webpage (view_demo)
   const viewDemoDir = path.join(rootDir, 'view_demo');
@@ -77,7 +84,47 @@ try {
     }
   }
 
-  console.log('=== Build Completed Cleanly! ===');
+  // 6. Write Vercel configuration to dist
+  const distVercelConfig = {
+    "$schema": "https://openapi.vercel.sh/vercel.json",
+    "version": 2,
+    "cleanUrls": true,
+    "rewrites": [
+      { "source": "/api/metadata", "destination": "/api/metadata.json" },
+      { "source": "/api/argo/matchups", "destination": "/api/argo_matchups.json" },
+      { "source": "/api/export/geojson", "destination": "/api/hazard_perimeter.geojson" },
+      { "source": "/view_demo", "destination": "/view_demo/index.html" },
+      { "source": "/view_demo/(.*)", "destination": "/view_demo/$1" }
+    ],
+    "headers": [
+      {
+        "source": "/(.*)",
+        "headers": [
+          { "key": "Access-Control-Allow-Origin", "value": "*" },
+          { "key": "Access-Control-Allow-Methods", "value": "GET,OPTIONS,HEAD" },
+          { "key": "X-Content-Type-Options", "value": "nosniff" },
+          { "key": "X-Frame-Options", "value": "SAMEORIGIN" }
+        ]
+      },
+      {
+        "source": "/api/(.*)",
+        "headers": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Cache-Control", "value": "public, max-age=86400, s-maxage=86400" }
+        ]
+      },
+      {
+        "source": "/data/(.*)",
+        "headers": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Cache-Control", "value": "public, max-age=86400, s-maxage=86400" }
+        ]
+      }
+    ]
+  };
+  fs.writeFileSync(path.join(distDir, 'vercel.json'), JSON.stringify(distVercelConfig, null, 2) + '\n', 'utf8');
+
+  console.log('=== Vercel Build Completed Cleanly! ===');
   process.exit(0);
 } catch (e) {
   console.log('Build caught notice:', e.message);

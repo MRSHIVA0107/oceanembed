@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Official INCOIS Ocean State & Cyclone Heat Advisory - 31 August 2026</title>
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.5;
+      color: #0f172a;
+      background: #f8fafc;
+      margin: 0;
+      padding: 1.25rem;
+    }
+    .bulletin-card {
+      max-width: 100%;
+      margin: 0 auto;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      box-sizing: border-box;
+    }
+    .official-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 2px solid #0f172a;
+      padding-bottom: 0.85rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .org-title {
+      font-size: 16px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #0f172a;
+    }
+    .org-sub {
+      font-size: 12px;
+      color: #475569;
+      font-weight: 600;
+    }
+    .ref-block {
+      text-align: right;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #475569;
+    }
+    .bulletin-title {
+      font-size: 17px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #1e3a8a;
+      margin-bottom: 3px;
+    }
+    .bulletin-subtitle {
+      font-size: 12px;
+      color: #64748b;
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+    .status-banner {
+      padding: 0.85rem 1rem;
+      border-radius: 6px;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .alert-critical { background: #fee2e2; color: #991b1b; border-left: 5px solid #dc2626; }
+    .alert-elevated { background: #fef3c7; color: #92400e; border-left: 5px solid #d97706; }
+    .alert-nominal { background: #ecfdf5; color: #065f46; border-left: 5px solid #10b981; }
+    
+    .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #334155;
+      margin-top: 1.2rem;
+      margin-bottom: 0.5rem;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 4px;
+    }
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .metric-box {
+      background: #f1f5f9;
+      padding: 0.65rem 0.85rem;
+      border-radius: 6px;
+      border: 1px solid #e2e8f0;
+    }
+    .metric-label { font-size: 10px; text-transform: uppercase; color: #64748b; font-weight: 700; }
+    .metric-val { font-size: 18px; font-weight: 800; color: #0f172a; margin-top: 2px; }
+    .metric-unit { font-size: 11px; font-weight: normal; color: #64748b; }
+    
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      margin-bottom: 1rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      text-align: left;
+    }
+    th { background: #f8fafc; padding: 6px 10px; border-bottom: 2px solid #cbd5e1; font-weight: 700; color: #475569; }
+    td { padding: 6px 10px; border-bottom: 1px solid #e2e8f0; }
+    .badge { padding: 2px 7px; border-radius: 4px; font-size: 10px; font-weight: 700; display: inline-block; }
+    .badge-crit { background: #fecaca; color: #991b1b; }
+    .badge-elev { background: #fef08a; color: #854d0e; }
+    .badge-nom { background: #bbf7d0; color: #166534; }
+    
+    .advisory-list { font-size: 12px; color: #334155; padding-left: 1.1rem; margin-top: 0.4rem; }
+    .advisory-list li { margin-bottom: 5px; }
+    .footer-stamp { border-top: 1px solid #cbd5e1; padding-top: 0.8rem; margin-top: 1.5rem; font-size: 11px; color: #64748b; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+    
+    @media print {
+      body { background: #fff; padding: 0; }
+      .bulletin-card { border: none; box-shadow: none; padding: 0; }
+      @page { margin: 1cm; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bulletin-card">
+    <div class="official-header">
+      <div>
+        <div class="org-title">Government of India &bull; Ministry of Earth Sciences (MoES)</div>
+        <div class="org-sub">Indian National Centre for Ocean Information Services (INCOIS), Hyderabad</div>
+        <div class="org-sub">OceanEmbed Operational Deep Ocean Thermal Reconnaissance Center</div>
+      </div>
+      <div class="ref-block">
+        <div><strong>REF:</strong> INCOIS-MOES/OSF/BOB/20260831/001</div>
+        <div><strong>DATE:</strong> 31 August 2026</div>
+        <div><strong>TIME:</strong> 00:00 UTC (05:30 IST)</div>
+      </div>
+    </div>
+
+    <div class="bulletin-title">OPERATIONAL OCEAN HEAT CONTENT &amp; CYCLONE INTENSIFICATION ADVISORY</div>
+    <div class="bulletin-subtitle">Bay of Bengal Maritime Domain (05.0°N&ndash;22.0°N, 80.0°E&ndash;95.0°E)</div>
+
+    <div class="status-banner alert-critical">
+      <div>
+        <span style="font-size: 14px;">&bull; CRITICAL CYCLONE HEAT ALERT (RI HAZARD)</span>
+        <div style="font-size: 11.5px; font-weight: normal; margin-top: 2px;">Subsurface thermal energy exceeds 80 kJ/cm² across 78.0% of the Bay of Bengal. High probability of Rapid Intensification for monsoonal depressions.</div>
+      </div>
+      <div style="font-family: monospace; font-size: 16px;">TCHP_MAX: 123.2 kJ/cm²</div>
+    </div>
+
+    <div class="section-title">1. Key Subsurface Thermal Diagnostics</div>
+    <div class="metrics-grid">
+      <div class="metric-box">
+        <div class="metric-label">Max Tropical Cyclone Heat Potential</div>
+        <div class="metric-val">123.2 <span class="metric-unit">kJ/cm²</span></div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-label">Deepest 26°C Isotherm (D26)</div>
+        <div class="metric-val">86.7 <span class="metric-unit">meters</span></div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-label">High-Risk RI Hazard Area</div>
+        <div class="metric-val">78.0% <span class="metric-unit">of Bay</span></div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-label">Mean Surface Temperature</div>
+        <div class="metric-val">29.36 <span class="metric-unit">°C</span></div>
+      </div>
+    </div>
+
+    <div class="section-title">2. Tactical Maritime Port &amp; Coastal Sector Status</div>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Port / Coastal Sector</th>
+            <th>Geographic Bearing</th>
+            <th>Coordinates</th>
+            <th>SST (°C)</th>
+            <th>D26 (m)</th>
+            <th>TCHP (kJ/cm²)</th>
+            <th>Thermal Hazard Level</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Visakhapatnam Naval Base</strong></td>
+            <td>NW Sector</td>
+            <td>17.68°N, 83.21°E</td>
+            <td>29.5</td>
+            <td>73.3</td>
+            <td>78.9</td>
+            <td><span class="badge badge-elev">ELEVATED</span></td>
+          </tr>
+          <tr>
+            <td><strong>Chennai Commercial Port</strong></td>
+            <td>SW Sector</td>
+            <td>13.08°N, 80.28°E</td>
+            <td>29.5</td>
+            <td>76.5</td>
+            <td>81.6</td>
+            <td><span class="badge badge-crit">CRITICAL</span></td>
+          </tr>
+          <tr>
+            <td><strong>Paradip Deepwater Port</strong></td>
+            <td>N Sector</td>
+            <td>20.26°N, 86.67°E</td>
+            <td>28.5</td>
+            <td>55.0</td>
+            <td>45.0</td>
+            <td><span class="badge badge-nom">NOMINAL</span></td>
+          </tr>
+          <tr>
+            <td><strong>Port Blair (Andaman Command)</strong></td>
+            <td>SE Sector</td>
+            <td>11.62°N, 92.72°E</td>
+            <td>29.4</td>
+            <td>79.7</td>
+            <td>88.7</td>
+            <td><span class="badge badge-crit">CRITICAL</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-title">3. Naval Underwater Acoustics &amp; Sonar Propagation Summary</div>
+    <div class="metrics-grid">
+      <div class="metric-box">
+        <div class="metric-label">Sonic Layer Depth (SLD)</div>
+        <div class="metric-val">38.5 <span class="metric-unit">meters</span></div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-label">Surface Sound Velocity</div>
+        <div class="metric-val">1543.2 <span class="metric-unit">m/s</span></div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-label">Acoustic Surface Ducting</div>
+        <div class="metric-val">ACTIVE <span class="metric-unit">top 50m</span></div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-label">SOFAR Channel Axis</div>
+        <div class="metric-val">~1000 <span class="metric-unit">meters</span></div>
+      </div>
+    </div>
+    <ul class="advisory-list">
+      <li><strong>Sonar Surface Ducting:</strong> Upper 50m barrier-layer thermal inversions in the northern Bay trap high-frequency acoustic rays, generating surface ducts. Subsurface sonars will experience sharp shadow zones below the thermocline depth (~75m).</li>
+      <li><strong>Submarine Detection:</strong> Acoustic duct strength exceeds +2.0 m/s across the central eddy perimeter, degrading hull-mounted active sonar detection ranges for targets beneath the thermocline.</li>
+    </ul>
+
+    <div class="section-title">4. Operational Directives &amp; Action Items</div>
+    <ul class="advisory-list">
+      <li><strong>Disaster Management Authorities (NDRF &amp; State SDMAs):</strong> Maintain vigilance for Rapid Intensification (RI) in any low-pressure depressions traversing between 12°N&ndash;16°N and 86°E&ndash;90°E, where TCHP exceeds the catastrophic threshold of 80 kJ/cm².</li>
+      <li><strong>Indian Coast Guard &amp; Merchant Shipping:</strong> Vessels navigating shipping corridors between Port Blair and Visakhapatnam/Chennai should review emergency routing protocols during monsoonal storm depressions.</li>
+      <li><strong>Scientific Disclaimer:</strong> Estimated TCHP and D26 parameters are derived from OceanEmbed 6-level deep learning reconstruction collocated from multi-source satellite observations. Refer to INCOIS SAMUDRA guidelines for official navigational alerts.</li>
+    </ul>
+
+    <div class="footer-stamp">
+      <div>Issued by: OceanEmbed Operational AI Unit, INCOIS &bull; Ministry of Earth Sciences (MoES)</div>
+      <div>CF-1.7 NetCDF / WMO GTS Compliant Delivery</div>
+    </div>
+  </div>
+</body>
+</html>

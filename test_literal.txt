@@ -1,0 +1,1 @@
+Testing $foo, ${bar}, `backtick`, & ampersand, <angle>, || pipe

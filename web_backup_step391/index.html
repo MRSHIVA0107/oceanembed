@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OceanEmbed – Deep Learning Reconstruction of Subsurface Ocean Temperature from Satellite Surface Observations</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  
+  <!-- Marine Workstation Stylesheet -->
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body class="theme-marine">
+  <!-- Top Command & Telemetry Ribbon -->
+  <header class="top-nav">
+    <div class="brand-group">
+      <div class="brand-badge">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+          <path d="M2 12h20"></path>
+        </svg>
+      </div>
+      <div>
+        <div class="brand-title">
+          OceanEmbed <span class="badge-ps">PS-26066</span>
+          <span class="brand-tagline">Deep Learning Reconstruction of Subsurface Ocean Temperature from Satellite Surface Observations</span>
+        </div>
+        <div class="brand-sub">
+          Ministry of Earth Sciences (MoES) &bull; INCOIS &bull; India&ndash;Japan Maritime Climate Resilience &amp; Naval Defense Intelligence
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Telemetry HUD -->
+    <div class="nav-telemetry">
+      <div class="hud-item">
+        <span class="hud-label">DATE (HELD-OUT TEST)</span>
+        <select id="dateSelect" class="form-select-hud"></select>
+      </div>
+
+      <div class="hud-item">
+        <span class="hud-label">MODEL CONFIGURATION</span>
+        <div class="hud-toggle-group" id="modelToggle">
+          <button class="hud-toggle-btn active" data-model="core-6">Core-6 Operational</button>
+          <button class="hud-toggle-btn" data-model="core-7">Core-7 (+SSS Ablation)</button>
+        </div>
+      </div>
+
+      <div class="hud-item hud-coords">
+        <span class="hud-label">CURSOR SOUNDING COORDINATES</span>
+        <div class="hud-coords-val">
+          <span id="hudCoordsDD">14.38°N, 88.38°E</span>
+          <span id="hudCoordsDMS" class="hud-dms">14°22'30"N, 88°22'30"E</span>
+        </div>
+      </div>
+
+      <div class="system-status">
+        <span class="status-indicator-dot"></span>
+        <span class="status-indicator-text">SYSTEM OPERATIONAL</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Workstation Layout -->
+  <main class="workstation-container">
+    <!-- Left Geospatial Map Viewport -->
+    <section class="panel map-panel">
+      <!-- Toolbar Controls -->
+      <div class="map-controls-bar">
+        <div class="ctrl-group">
+          <span class="ctrl-label">LAYER:</span>
+          <div class="btn-group-marine" id="layerSelector">
+            <button class="btn-marine active" data-layer="temp">Temperature Field</button>
+            <button class="btn-marine" data-layer="tchp">TCHP &amp; Cyclone Hazard</button>
+            <button class="btn-marine" data-layer="acoustics">Naval Sound Speed (C)</button>
+            <button class="btn-marine" data-layer="uncertainty">MC Epistemic Uncertainty</button>
+          </div>
+        </div>
+
+        <div class="ctrl-group" id="depthControlGroup">
+          <span class="ctrl-label">DEPTH SLICE:</span>
+          <div class="depth-stepper" id="depthSelector">
+            <button class="depth-chip" data-depth="0">0m (SST)</button>
+            <button class="depth-chip" data-depth="50">50m (Upper TC)</button>
+            <button class="depth-chip active" data-depth="100">100m (TC Core)</button>
+            <button class="depth-chip" data-depth="200">200m (Lower TC)</button>
+            <button class="depth-chip" data-depth="500">500m (Intermediate)</button>
+            <button class="depth-chip" data-depth="1000">1000m (Deep)</button>
+          </div>
+        </div>
+
+        <div class="ctrl-group ctrl-switches">
+          <label class="marine-switch">
+            <input type="checkbox" id="hazardPerimeterToggle" checked />
+            <span class="switch-box"></span>
+            <span class="switch-txt">RI Hazard (&ge;80 kJ/cm²)</span>
+          </label>
+          <label class="marine-switch">
+            <input type="checkbox" id="argoToggle" checked />
+            <span class="switch-box"></span>
+            <span class="switch-txt">ARGO Buoys</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Map Canvas -->
+      <div id="map" class="marine-map-canvas"></div>
+
+      <!-- Map Overlays (Legend & Scientific Disclosures) -->
+      <div class="map-bottom-strip">
+        <div class="legend-card" id="mapLegend">
+          <div class="legend-header" id="legendHeader">Temperature (°C)</div>
+          <div class="legend-bar" id="legendBar"></div>
+          <div class="legend-ticks" id="legendTicks">
+            <span id="legMin">--</span>
+            <span id="legMid">--</span>
+            <span id="legMax">--</span>
+          </div>
+        </div>
+
+        <div class="disclosures-card">
+          <div class="disclosure-item">
+            <span class="disclosure-pill">METHODOLOGY</span>
+            Estimated TCHP / D26 &mdash; Derived via 6-level piecewise vertical interpolation across cell-centered 0.25° grid.
+          </div>
+          <div class="disclosure-item">
+            <span class="disclosure-pill">MC DROPOUT</span>
+            Epistemic Uncertainty standard deviation (S=10 passes with frozen BatchNorm); represents model weight sensitivity.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Tactical Intelligence & Analysis Drawer -->
+    <section class="panel telemetry-panel">
+      <!-- Tabs Bar -->
+      <div class="drawer-tabs">
+        <button class="drawer-tab-btn active" data-tab="probeTab">Subsurface Sounding &amp; Acoustics</button>
+        <button class="drawer-tab-btn" data-tab="transectTab">Zonal Transect</button>
+        <button class="drawer-tab-btn" data-tab="benchmarkTab">Validation Matrix</button>
+        <button class="drawer-tab-btn" data-tab="bulletinTab">Official Advisory Bulletin</button>
+      </div>
+
+      <!-- Tab Content Area -->
+      <div class="drawer-body">
+        <!-- Tab 1: Subsurface Sounding & Acoustics -->
+        <div class="tab-pane active" id="probeTab">
+          <div class="telemetry-header">
+            <div>
+              <h2 class="pane-headline">Subsurface Column Sounding &amp; Acoustics</h2>
+              <p class="pane-subtext" id="probeLocationText">14.38°N, 88.38°E &bull; Central Bay of Bengal Anticyclonic Warm Core</p>
+            </div>
+            <div id="probeRiskBadge" class="hazard-badge hazard-critical">TCHP: 101.1 kJ/cm² (CRITICAL RI RISK)</div>
+          </div>
+
+          <!-- Dual Plot: Thermal Profile & Sound Velocity -->
+          <div class="dual-chart-row">
+            <div class="chart-tile">
+              <div class="chart-tile-header">
+                <span>Temperature Profile T(z)</span>
+                <span class="chart-tile-sub">Inverted Axis (0–1000m)</span>
+              </div>
+              <div class="chart-box">
+                <canvas id="profileChart"></canvas>
+              </div>
+            </div>
+
+            <div class="chart-tile">
+              <div class="chart-tile-header">
+                <span>Sound Velocity C(z)</span>
+                <span class="chart-tile-sub">Mackenzie Equation (m/s)</span>
+              </div>
+              <div class="chart-box">
+                <canvas id="soundChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Key Quantitative Metrics Grid -->
+          <div class="telemetry-kpi-grid">
+            <div class="kpi-cell">
+              <div class="kpi-cell-label">D26 ISOTHERM DEPTH</div>
+              <div class="kpi-cell-val" id="kpiD26">81.3 <span class="unit">m</span></div>
+              <div class="kpi-cell-sub">Depth of 26°C isotherm boundary</div>
+            </div>
+            <div class="kpi-cell kpi-alert">
+              <div class="kpi-cell-label">TROPICAL CYCLONE HEAT POTENTIAL</div>
+              <div class="kpi-cell-val" id="kpiTCHP">101.1 <span class="unit">kJ/cm²</span></div>
+              <div class="kpi-cell-sub">Quad integral above 26°C (&ge;80 = High Hazard)</div>
+            </div>
+            <div class="kpi-cell">
+              <div class="kpi-cell-label">SONIC LAYER DEPTH (SLD)</div>
+              <div class="kpi-cell-val" id="kpiSLD">50.0 <span class="unit">m</span></div>
+              <div class="kpi-cell-sub">Sound speed maximum in upper layer</div>
+            </div>
+            <div class="kpi-cell">
+              <div class="kpi-cell-label">SURFACE DUCT STRENGTH</div>
+              <div class="kpi-cell-val" id="kpiDuct">+1.17 <span class="unit">m/s</span></div>
+              <div class="kpi-cell-sub">Excess velocity; Traps high-freq sonar</div>
+            </div>
+          </div>
+
+          <!-- Tactical Assessment Banner -->
+          <div class="tactical-banner" id="tacticalAssessmentText">
+            <strong>TACTICAL NAVAL ASSESSMENT:</strong> ACTIVE SURFACE DUCT (SLD = 50m, ΔC = +1.2 m/s). Sonar trapped in upper 50m; Acoustic shadow zone beneath thermocline.
+          </div>
+
+          <!-- ARGO Matchup Card -->
+          <div class="argo-card" id="argoCard">
+            <div class="argo-card-header">
+              <span class="argo-card-title">COLOCATED IN-SITU ARGO FLOAT OBSERVATION</span>
+              <span class="argo-station-id" id="argoWmoId">WMO 2903341 (Cycle 015)</span>
+            </div>
+            <div class="argo-stats-row">
+              <div class="argo-stat">Profile RMSE: <strong id="argoRmseVal">0.343°C</strong></div>
+              <div class="argo-stat">D26 Error: <strong id="argoD26Val">&plusmn;4.8 m</strong></div>
+              <div class="argo-stat">TCHP Error: <strong id="argoTchpVal">&plusmn;13.5 kJ/cm²</strong></div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="action-bar">
+            <button class="btn-action" id="downloadCsvBtn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export Sounding CSV
+            </button>
+            <button class="btn-action" id="openBulletinBtn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              View Official Bulletin
+            </button>
+          </div>
+        </div>
+
+        <!-- Tab 2: Zonal Transect -->
+        <div class="tab-pane" id="transectTab">
+          <div class="telemetry-header">
+            <div>
+              <h2 class="pane-headline">Zonal Vertical Transect (Depth vs. Longitude)</h2>
+              <p class="pane-subtext" id="transectHeaderSub">Cross-Section along 14.38°N crossing Central Bay Anticyclonic Eddy</p>
+            </div>
+            <div class="hud-item">
+              <span class="hud-label">SECTION LATITUDE</span>
+              <select id="transectLatSelect" class="form-select-hud"></select>
+            </div>
+          </div>
+
+          <div class="transect-chart-container">
+            <canvas id="transectChart"></canvas>
+          </div>
+
+          <div class="transect-explanation">
+            <h4>Physical Oceanographic Interpretation:</h4>
+            <p>The downward depression of the 20°C and 26°C isotherms between 86°E and 90°E visualizes the core of the anticyclonic warm eddy. This subsurface thermal dome acts as a vast heat reservoir ($TCHP > 80\text{ kJ/cm}^2$) capable of fueling explosive tropical cyclone rapid intensification (RI) while minimizing wind-induced sea surface cooling.</p>
+          </div>
+        </div>
+
+        <!-- Tab 3: Scientific Validation Matrix -->
+        <div class="tab-pane" id="benchmarkTab">
+          <div class="telemetry-header">
+            <div>
+              <h2 class="pane-headline">Held-Out Test Set Performance Matrix</h2>
+              <p class="pane-subtext">Strict Temporal Hold-Out: August 16–31, 2023 (16 Daily Timesteps across 3,139 Sea Pixels)</p>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table class="marine-table">
+              <thead>
+                <tr>
+                  <th>Depth Level</th>
+                  <th>Climatology Prior</th>
+                  <th>SST-Linear Baseline</th>
+                  <th>Multi-Source Regressor</th>
+                  <th>OceanEmbed Core-6</th>
+                  <th>OceanEmbed Core-7 (+SSS)</th>
+                  <th>Skill Score (SS)</th>
+                </tr>
+              </thead>
+              <tbody id="benchmarkTableBody">
+                <tr><td colspan="7" class="loading-td">Loading validated benchmark matrix...</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="summary-cards-row">
+            <div class="summary-card">
+              <div class="summary-card-title">Thermocline Skill (SS_TC)</div>
+              <div class="summary-card-val text-cyan" id="benchSsTc">+0.212</div>
+              <div class="summary-card-desc">50m–200m critical gradient layer</div>
+            </div>
+            <div class="summary-card">
+              <div class="summary-card-title">Overall Skill (SS_overall)</div>
+              <div class="summary-card-val text-green" id="benchSsOverall">+0.253</div>
+              <div class="summary-card-desc">Across all 6 standard depth levels</div>
+            </div>
+            <div class="summary-card">
+              <div class="summary-card-title">ARGO Full-Profile RMSE</div>
+              <div class="summary-card-val text-amber">0.343°C</div>
+              <div class="summary-card-desc">Evaluated against 18 WMO CTD soundings</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 4: Official INCOIS Advisory Bulletin -->
+        <div class="tab-pane" id="bulletinTab">
+          <div class="telemetry-header">
+            <div>
+              <h2 class="pane-headline">Operational Maritime Advisory Bulletin</h2>
+              <p class="pane-subtext">Official MoES / INCOIS Ocean State &amp; Cyclone Heat Forecast Format</p>
+            </div>
+            <div class="bulletin-actions">
+              <a class="btn-action" id="downloadGeoJsonBtn" href="/api/export/geojson" target="_blank">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download Hazard GeoJSON
+              </a>
+              <button class="btn-action" id="printBulletinBtn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                Print / Save PDF
+              </button>
+            </div>
+          </div>
+
+          <div class="bulletin-frame-box">
+            <iframe id="bulletinIframe" src="/api/bulletin" class="bulletin-iframe"></iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- External Libraries -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  
+  <!-- Marine Workstation Client Engine -->
+  <script src="/static/app.js"></script>
+</body>
+</html>

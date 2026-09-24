@@ -1,0 +1,5 @@
+/api/metadata /api/metadata.json 200
+/api/argo/matchups /api/argo_matchups.json 200
+/api/export/geojson /api/hazard_perimeter.geojson 200
+/api/bulletin /api/bulletin.html 200
+/* /index.html 200

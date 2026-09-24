@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="OceanEmbed — AI-powered ocean heat risk intelligence and subsurface temperature reconstruction.">
+  <title>OceanEmbed — Ocean Data Platform</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="noise"></div>
+
+  <header class="nav">
+    <a class="brand" href="#top">
+      <span class="brand-mark"><i></i><i></i><i></i></span>
+      <span>OCEAN<span>EMBED</span></span>
+    </a>
+    <nav>
+      <a href="#explorer">EXPLORER</a>
+      <a href="#solution">SOLUTION</a>
+      <a href="#intelligence">INTELLIGENCE</a>
+      <a href="#models">MODELS</a>
+      <a href="#data">DATA</a>
+    </nav>
+    <div class="platform-switcher" role="navigation" aria-label="Demo Views">
+      <a href="../index.html#demo" class="platform-tab tab-redirect" title="Go to Interactive Operations Deck">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        <span>Operations Deck ↗</span>
+      </a>
+      <a href="../index.html" class="platform-tab" title="Go to Story Overview">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>Story Overview ↗</span>
+      </a>
+      <button class="platform-tab active" title="Currently viewing Solution Showcase">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polygon points="12 8 8 12 12 16 12 8"/></svg>
+        <span>Solution Showcase</span>
+      </button>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-grid"></div>
+      <div class="hero-copy reveal">
+        <p class="eyebrow">OCEAN DATA PLATFORM · SIH 2026</p>
+        <h1>OCEAN<br><em>EMBED</em></h1>
+        <p class="hero-text">
+          Connecting ocean observations and data to make what lies beneath
+          easier to explore and understand.
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="#explorer">EXPLORE THE OCEAN</a>
+          <a class="button ghost" href="#solution">HOW IT WORKS ↓</a>
+        </div>
+      </div>
+      <div class="ocean-orb reveal">
+        <div class="orb-glow"></div>
+        <div class="orb">
+          <span class="continent c1"></span>
+          <span class="continent c2"></span>
+          <span class="current cur1"></span>
+          <span class="current cur2"></span>
+          <span class="current cur3"></span>
+          <span class="pin pin1"></span>
+          <span class="pin pin2"></span>
+          <span class="pin pin3"></span>
+        </div>
+        <div class="orb-label"><span>05°N — 22°N</span><span>80°E — 95°E</span></div>
+      </div>
+      <div class="hero-bottom">
+        <span>01 / 08</span><span>SUBSURFACE OCEAN INTELLIGENCE</span><span>↓ SCROLL TO DISCOVER</span>
+      </div>
+    </section>
+
+    <section class="statement dark" id="explorer">
+      <div class="section-tag">THE PROBLEM</div>
+      <div class="statement-content reveal">
+        <h2>THE OCEAN IS<br><span>MORE THAN</span><br>ITS SURFACE.</h2>
+        <p>Satellites provide abundant information about the ocean surface. But the temperature structure below the surface is harder to observe continuously.</p>
+      </div>
+    </section>
+
+    <section class="split-section">
+      <div class="split-copy reveal">
+        <p class="eyebrow">BENEATH THE SURFACE</p>
+        <h2>WHAT LIES BELOW<br><em>REMAINS HIDDEN.</em></h2>
+        <p>Ocean heat is distributed through depth. Understanding that hidden structure helps researchers study climate variability and ocean heat indicators.</p>
+      </div>
+      <div class="depth-card reveal">
+        <div class="depth-title"><span>DEPTH PROFILE</span><b id="depthValue">100 m</b></div>
+        <div class="water-profile">
+          <div class="profile-line"></div>
+          <div class="profile-point" id="depthPoint"></div>
+          <span class="d d0">0 m</span>
+          <span class="d d1">50 m</span>
+          <span class="d d2">100 m</span>
+          <span class="d d3">200 m</span>
+          <span class="d d4">500 m</span>
+          <span class="d d5">1000 m</span>
+        </div>
+        <input id="depthSlider" type="range" min="0" max="1000" step="50" value="100">
+        <div class="profile-readout"><span>ESTIMATED TEMPERATURE</span><strong id="tempValue">28.4°C</strong></div>
+      </div>
+    </section>
+
+    <section class="data-gap dark">
+      <div class="big-number">01</div>
+      <div class="data-gap-copy reveal">
+        <p class="eyebrow">THE DATA GAP</p>
+        <h2>SURFACE DATA IS<br><em>ABUNDANT.</em><br>DEPTH DATA IS NOT.</h2>
+        <p>OceanEmbed combines multiple surface and reanalysis signals and learns a depth-resolved representation of ocean temperature.</p>
+      </div>
+      <div class="signal-grid">
+        <span>SST</span><span>SSH / SLA</span><span>U CURRENT</span>
+        <span>V CURRENT</span><span>U WIND</span><span>V WIND</span>
+        <span>+ SSS</span><span>ARGO</span>
+      </div>
+    </section>
+
+    <section class="challenge">
+      <div class="challenge-title reveal">
+        <p class="eyebrow">THE CHALLENGE</p>
+        <h2>CAN SURFACE<br>SIGNALS REVEAL<br><em>THE DEPTHS?</em></h2>
+      </div>
+      <div class="challenge-answer reveal">
+        <span class="answer-mark">→</span>
+        <h3>OCEANEMBED<br>LEARNS THE LINK.</h3>
+        <p>A physics-regularized deep-learning framework reconstructs temperature at six standard depth levels, while uncertainty estimates communicate where the reconstruction needs more caution.</p>
+      </div>
+    </section>
+
+    <section class="process dark" id="solution">
+      <div class="section-heading">
+        <p class="eyebrow">SOLUTION · DATASET</p>
+        <h2>BUILD THE<br><em>OCEAN DATASET.</em></h2>
+      </div>
+      <div class="process-grid">
+        <article class="process-card reveal">
+          <span class="card-no">01</span>
+          <h3>GLORYS</h3>
+          <p>Dense reanalysis fields provide the training target across the Bay of Bengal domain.</p>
+          <div class="card-meta">68 × 60 GRID · 0.25°</div>
+        </article>
+        <article class="process-card reveal">
+          <span class="card-no">02</span>
+          <h3>ARGO</h3>
+          <p>Independent in-situ float profiles are withheld from training and used for validation.</p>
+          <div class="card-meta">INDEPENDENT VALIDATION</div>
+        </article>
+        <article class="process-card reveal">
+          <span class="card-no">03</span>
+          <h3>CLIMATOLOGY</h3>
+          <p>A background temperature field gives the model a physical baseline for anomaly prediction.</p>
+          <div class="card-meta">ANOMALY FORMULATION</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="model-section" id="models">
+      <div class="model-copy reveal">
+        <p class="eyebrow">SOLUTION · MODEL</p>
+        <h2>TRAIN<br>THE <em>MODEL.</em></h2>
+        <p>OceanEmbed uses a ResNet-18 encoder-decoder with depth conditioning. The network learns patterns connecting surface observations with the subsurface temperature structure.</p>
+        <div class="model-specs">
+          <div><span>ARCHITECTURE</span><strong>RESNET-18</strong></div>
+          <div><span>DEPTH LEVELS</span><strong>06</strong></div>
+          <div><span>MC DROPOUT</span><strong>10 PASSES</strong></div>
+        </div>
+      </div>
+      <div class="network reveal">
+        <div class="node input">INPUT<br><small>CORE-6 / CORE-7</small></div>
+        <div class="wire w1"></div>
+        <div class="node enc">ENCODER<br><small>RESNET-18</small></div>
+        <div class="wire w2"></div>
+        <div class="node bottleneck">DEPTH<br>CONDITION</div>
+        <div class="wire w3"></div>
+        <div class="node dec">DECODER<br><small>BILINEAR</small></div>
+        <div class="wire w4"></div>
+        <div class="node output">OUTPUT<br><small>0—1000 m</small></div>
+      </div>
+    </section>
+
+    <section class="reconstruction dark">
+      <div class="reconstruction-head reveal">
+        <p class="eyebrow">SOLUTION · RECONSTRUCTION</p>
+        <h2>RECONSTRUCT<br>THE <em>HIDDEN OCEAN.</em></h2>
+      </div>
+      <div class="layer-console reveal">
+        <div class="console-top">
+          <span>OCEAN PROFILE / BAY OF BENGAL</span>
+          <span id="layerLabel">100 M</span>
+        </div>
+        <div class="heatmap" id="heatmap"></div>
+        <div class="layer-tabs">
+          <button data-depth="0">0 M</button>
+          <button data-depth="50">50 M</button>
+          <button class="active" data-depth="100">100 M</button>
+          <button data-depth="200">200 M</button>
+          <button data-depth="500">500 M</button>
+          <button data-depth="1000">1000 M</button>
+        </div>
+        <div class="console-stats">
+          <div><span>EST. TEMP</span><b id="consoleTemp">28.4°C</b></div>
+          <div><span>UNCERTAINTY</span><b id="consoleUncertainty">LOW</b></div>
+          <div><span>GRID</span><b>0.25°</b></div>
+          <div><span>STATUS</span><b class="live">RECONSTRUCTED</b></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="validation" id="data">
+      <div class="section-heading reveal">
+        <p class="eyebrow">VALIDATION</p>
+        <h2>TEST AGAINST<br><em>REAL OBSERVATIONS.</em></h2>
+      </div>
+      <div class="validation-layout">
+        <div class="float-visual reveal">
+          <div class="float-orbit"></div>
+          <div class="argo-float">
+            <span class="float-body"></span><span class="float-line"></span><span class="float-sensor"></span>
+          </div>
+          <span class="float-label">ARGO</span>
+        </div>
+        <div class="validation-copy reveal">
+          <p>ARGO profiles provide independent observations of ocean temperature through the water column. OceanEmbed compares reconstructed profiles against collocated ARGO measurements.</p>
+          <div class="metrics">
+            <div><strong>RMSE</strong><span>ERROR</span></div>
+            <div><strong>BIAS</strong><span>SYSTEMATIC OFFSET</span></div>
+            <div><strong>R</strong><span>CORRELATION</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="error-section dark">
+      <div class="error-copy reveal">
+        <p class="eyebrow">VALIDATION · ERROR</p>
+        <h2>MEASURE<br>THE <em>ERROR.</em></h2>
+        <p>Validation metrics make model performance measurable rather than assumed. The test period remains excluded from training.</p>
+      </div>
+      <div class="metric-board reveal">
+        <div class="metric-row"><span>RMSE</span><strong>↓</strong><b>COMPARE</b></div>
+        <div class="metric-row"><span>BIAS</span><strong>↔</strong><b>CHECK</b></div>
+        <div class="metric-row"><span>CORRELATION</span><strong>↑</strong><b>ALIGN</b></div>
+        <div class="metric-row"><span>UNCERTAINTY</span><strong>±</strong><b>QUALIFY</b></div>
+      </div>
+    </section>
+
+    <section class="intelligence" id="intelligence">
+      <div class="intel-copy reveal">
+        <p class="eyebrow">OCEAN INTELLIGENCE</p>
+        <h2>TURN TEMPERATURE<br>INTO <em>INDICATORS.</em></h2>
+        <p>Depth-resolved temperature can be used to derive diagnostic indicators such as D26 and Tropical Cyclone Heat Potential (TCHP), with explicit caveats when the available depth does not capture the full warm layer.</p>
+      </div>
+      <div class="intel-cards">
+        <article class="intel-card reveal">
+          <span>D26</span>
+          <h3>26°C DEPTH</h3>
+          <p>Estimated depth where temperature reaches approximately 26°C.</p>
+          <div class="gauge"><i style="width:63%"></i></div>
+          <b>≈ 126 M</b>
+        </article>
+        <article class="intel-card reveal">
+          <span>TCHP</span>
+          <h3>HEAT POTENTIAL</h3>
+          <p>Heat content above the 26°C reference, derived from the reconstructed profile.</p>
+          <div class="heat-number">80+</div>
+          <b>kJ/cm² · VISUAL FLAG</b>
+        </article>
+        <article class="intel-card caution reveal">
+          <span>!</span>
+          <h3>UNCERTAINTY</h3>
+          <p>MC Dropout provides an epistemic uncertainty estimate from repeated forward passes.</p>
+          <div class="confidence"><i></i><i></i><i></i><i></i><i></i></div>
+          <b>10 FORWARD PASSES</b>
+        </article>
+      </div>
+    </section>
+
+    <section class="iteration dark">
+      <div class="iteration-left reveal">
+        <p class="eyebrow">ITERATION</p>
+        <h2>LEARN.<br>COMPARE.<br><em>IMPROVE.</em></h2>
+      </div>
+      <div class="loop reveal">
+        <div class="loop-ring"></div>
+        <span class="loop-node n1">TRAIN</span>
+        <span class="loop-node n2">VALIDATE</span>
+        <span class="loop-node n3">COMPARE</span>
+        <span class="loop-node n4">REFINE</span>
+        <div class="loop-center">∞</div>
+      </div>
+    </section>
+
+    <section class="application">
+      <div class="app-head reveal">
+        <p class="eyebrow">APPLICATION</p>
+        <h2>FROM TRAINING TO<br><em>REAL-WORLD INSIGHT.</em></h2>
+      </div>
+      <div class="app-grid">
+        <div class="app-item reveal"><span>01</span><h3>OCEAN SCIENCE</h3><p>Explore subsurface temperature structure and ocean variability.</p></div>
+        <div class="app-item reveal"><span>02</span><h3>CLIMATE RESEARCH</h3><p>Study heat distribution and changes across depth.</p></div>
+        <div class="app-item reveal"><span>03</span><h3>MARITIME INFORMATION</h3><p>Provide a richer ocean-data layer for analysis and planning.</p></div>
+        <div class="app-item reveal"><span>04</span><h3>RESEARCH WORKFLOWS</h3><p>Expose reconstructed fields, diagnostics and uncertainty through a future API/console.</p></div>
+      </div>
+    </section>
+
+    <section class="vision dark">
+      <div class="vision-copy reveal">
+        <p class="eyebrow">FINAL VISION</p>
+        <h2>FROM SCATTERED<br>OBSERVATIONS TO A<br><em>CLEARER VIEW</em><br>OF THE OCEAN.</h2>
+        <p>OceanEmbed brings observations, learned reconstruction, physics constraints, validation and uncertainty into one ocean intelligence layer.</p>
+        <a class="button primary" href="#top">BACK TO TOP ↑</a>
+      </div>
+      <div class="vision-water">
+        <div class="wave wv1"></div><div class="wave wv2"></div><div class="wave wv3"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-brand">OCEAN<span>EMBED</span></div>
+    <div class="footer-links">
+      <a href="#explorer">Explorer</a>
+      <a href="#solution">Solution</a>
+      <a href="#models">Models</a>
+      <a href="#data">Argo Floats</a>
+      <a href="#intelligence">Intelligence</a>
+      <a href="../index.html#demo" style="color: var(--aqua); font-weight: 700;">🌊 Operations Deck ↗</a>
+      <a href="../index.html" style="color: var(--aqua); font-weight: 700;">📖 Story Overview ↗</a>
+    </div>
+    <div class="footer-bottom">
+      <span>AI-POWERED OCEAN HEAT RISK INTELLIGENCE</span>
+      <span>© 2026 OCEANEMBED · PROTOTYPE</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

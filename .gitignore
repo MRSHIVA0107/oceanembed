@@ -1,2 +1,5 @@
 .rocketride/
 .env
+.vercel
+node_modules/
+scratch/
